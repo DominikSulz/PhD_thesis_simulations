@@ -6,11 +6,11 @@ addpath('C:\Users\Dominik\Documents\MATLAB\Low rank approximations\rank_adaptive
 addpath('C:\Users\Dominik\Documents\MATLAB\Low rank approximations\parallel_TTN_integrator')
 
 % number particles
-d = 16;
+d = 2;
 % parameters of the model
 Omega = 1;
 % time step size and final time
-T_end = 5;
+T_end = 1;
 dt = 0.01;
 % rank of initial data at bottom layer
 r = 2;
@@ -21,7 +21,7 @@ r_op_min = 2;
 % for rank-adaptive integrator
 tol = 10^-8;
 r_min = 2;
-r_max = 30;
+r_max = 2;
 
 %%% time-step
 Iter=T_end/dt;
@@ -42,7 +42,7 @@ B = linearisation_Ising(Omega*sx,sz,d);
 % make operator of Ising model in TTN representation -> change that to HSS construction
 A = make_operator(X,B,tau,2*ones(d,1));
 A{end} = -A{end};
-A{end} = -1i*A{end};
+% A{end} = -1i*A{end};
 A = rounding(A,tau);
 A = truncate(A,10^-14,r_op_max,r_op_min);
 
@@ -87,7 +87,7 @@ for it=1:Iter
     X_new_ad = truncate(X_new_ad,tol,r_max,r_min);
     
     % BUG integrator
-    X_new_BUG = TTN_integrator_complex_nonglobal_spin(tau,X_start_BUG,@F_Ising,t0,t1,A,d);
+    X_new_BUG = TTN_integrator_complex_nonglobal(tau,X_start_BUG,@F_Ising,t0,t1,A,d);
     
     % parallel BUG
     X_new_par = TTN_integrator_complex_parallel_nonglobal(tau,X_start_par,@F_Ising,t0,t1,A,d,r_min);
@@ -300,13 +300,13 @@ psi=zeros(2^L,1);
 psi(1,1)=1;
 
 tic
-Vt=expm(-1i*dt*H_sys); % Vt=expm(-1i*dt*H_sys);
+Vt=expm(dt*H_sys); % Vt=expm(-1i*dt*H_sys);
 toc
 
 for tst=1:Iter
     time(tst)=tst*dt;
     psi=Vt*psi;
-    psi=psi/norm(psi);
+%     psi=psi/norm(psi);
 
     p1(tst)=dot(psi,Mag*psi)/L;
     energy(tst)=dot(psi,H_sys*psi)/L;

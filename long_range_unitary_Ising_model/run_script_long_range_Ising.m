@@ -6,17 +6,17 @@ addpath('C:\Users\Dominik\Documents\MATLAB\Low rank approximations\TTNO\HSS_and_
 addpath('C:\Users\Dominik\Documents\MATLAB\Matlab toolboxes\hm-toolbox-master')
 
 % number particles
-d = 16;
+d = 8;
 l = log(d)/log(2); % number of layers
 n = 2;             % physical dimension
 
 % parameters of the model
 nu = 2;
 Delta = 1;
-Omega = 1;
-alpha = 1;
+Omega = 3;
+alpha = 10000;
 % time step size and final time
-T_end = 1;
+T_end = 10;
 dt = 0.01;
 % rank of initial data at bottom layer
 r = 2;
@@ -25,9 +25,9 @@ r_op_max = 40;
 r_op_min = 2;
 
 % for rank-adaptive integrator
-tol = 10^-8;
+tol = 10^-12;
 r_min = 2;
-r_max = 30;
+r_max = 10;
 
 % constant for step rejection
 const = 10;
@@ -49,7 +49,7 @@ n_Pu=[1,0;0,0];    %% Projector onto the excited state Pu=(sz+id)/2;
 % [X,tau] = init_spin_all_dim_diff_rank2(d);
 % X = rounding(X,tau);
 % [X,tau] = init_spin_all_dim_rank2(r,2,d);
-r_vec = [r_max 16 4 2];  % r_vec = [r_max 16 4 2];          % adjust to each TTN! 
+r_vec = [10 4 2];  % r_vec = [r_max 16 4 2];          % adjust to each TTN! 
 [X,tau] = init_unconventional(r_vec,2,d);
 
 
